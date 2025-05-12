@@ -1,20 +1,53 @@
-# Rubric
+# How to request and receive data from the microservice
 
-> README in screenshot(s) has UML sequence diagram that clearly communicates how to request and receive data 
+> RUBRIC: README in screenshot(s) clearly describes how to request and receive data from the microservice you implemented.
+> Include example calls.
+> 
+Microservice A server is named `three_words_server.py` and can be downloaded 
+from this [Github repository link](https://github.com/jeffreybenner/CS361_microserviceA_3_words):
+
+To run this server, make sure you have the following Python packages installed:
+
+```shell
+pip install RandomWords
+pip install ZeroMQ
+```
+
+This server was tested on Python 3.13. Execute the server, which will run on ZeroMQ port 8765, with the following command:
+
+```shell
+python three_words_server.py
+```
+
+Your client will request the message via the request string 'words' and will receive a string of three concatenated, 
+comma-delimited random words as response.
+
+Here is a client code snippet that demonstrates how to request and receive data from the server:
+
+```python
+import zmq # For ZeroMQ
+
+# How to create a context and socket
+context = zmq.Context()
+# Configure REQ - request socket
+socket = context.socket(zmq.REQ)
+
+# Connect socket to address string: tcp://localhost:8765
+# Server must be running on this port or the client will hang
+socket.connect("tcp://localhost:8765")
+
+# How to send request to server
+socket.send_string("words")
+
+# How to receive a response - message response is string data type
+response: str = socket.recv().decode()
+print(f"Received 3 random words: {response}")
+```
+
+# UML Sequence Diagram
+> RUBRIC: README in screenshot(s) has UML sequence diagram that clearly communicates how to request and receive data
 > from the microservice you implemented; No obvious notational errors
 
-> 4.a. Stated the teammate for whom you implemented "Microservice A"
-> 4.b. Clearly stated the current status of the microservice you are implementing / you implemented for your teammate
-> 4.c. Clearly stated problems with the microservice you implemented and by when you'll fix them
-> 4.d. Clearly described how your teammate should go about accessing the microservice you implemented. 
-> If GitHub, also include the link to the repo here
-> 4.e. Clearly stated what your teammate should do if they cannot access/call the microservice you implemented
-> 4.f. Clearly stated by when (the date) your teammate needs to notify you of problems with the microservice you implemented
-> 4.g. Clearly stated anything else your teammate needs to know, if there is anything. If nothing additional write "N/A"
+![Sequence Diagram-three-words.png](Sequence%20Diagram-three-words.png)
 
-# How to request and receive data from the microservice
-> RUBRIC: README in screenshot(s) clearly describes how to request and receive data from the microservice you implemented.
-> Include example calls. Do not advise your teammate to use your test program or require them to, 
-> your teammate must write all of their own code.
-> 
-Microservice A server is named `three_words_server.py` and can be downloaded from this Github repository link:
+
